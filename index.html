@@ -9,23 +9,23 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#e8e4dc;
-  --surface:#f5f3ee;
-  --border:rgba(0,0,0,0.10);
-  --border2:rgba(0,0,0,0.15);
-  --text:#111111;
-  --dim:#5c554a;
-  --teal:#0a7a70;
-  --teal-soft:rgba(10,122,112,0.10);
-  --amber:#924208;
-  --amber-soft:rgba(146,66,8,0.09);
-  --amber-med:rgba(146,66,8,0.18);
-  --active:#0a7a70;
-  --active-bg:rgba(10,122,112,0.10);
-  --active-border:rgba(10,122,112,0.35);
-  --next:#1d4ed8;
-  --next-bg:rgba(29,78,216,0.07);
-  --next-border:rgba(29,78,216,0.25);
+  --bg:#0a0a0a;
+  --surface:#161616;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.15);
+  --text:#f0f0f0;
+  --dim:#707070;
+  --teal:#f0f0f0;
+  --teal-soft:rgba(255,255,255,0.05);
+  --amber:#d4a017;
+  --amber-soft:rgba(212,160,23,0.08);
+  --amber-med:rgba(212,160,23,0.15);
+  --active:#f0f0f0;
+  --active-bg:rgba(255,255,255,0.06);
+  --active-border:rgba(255,255,255,0.3);
+  --next:#d4a017;
+  --next-bg:rgba(212,160,23,0.08);
+  --next-border:rgba(212,160,23,0.4);
 }
 body{
   font-family:'DM Sans',sans-serif;
@@ -37,8 +37,8 @@ body{
 body::before{
   content:'';position:fixed;inset:0;
   background:
-    radial-gradient(ellipse at 0% 100%,rgba(13,148,136,0.04) 0%,transparent 50%),
-    radial-gradient(ellipse at 100% 0%,rgba(180,83,9,0.03) 0%,transparent 50%);
+    radial-gradient(ellipse at 0% 100%,rgba(212,160,23,0.03) 0%,transparent 50%),
+    radial-gradient(ellipse at 100% 0%,rgba(255,255,255,0.02) 0%,transparent 50%);
   pointer-events:none;
 }
 .wrap{
@@ -56,7 +56,8 @@ body::before{
 .hdr-l .ico{
   font-size:3rem;width:70px;height:70px;
   display:flex;align-items:center;justify-content:center;
-  background:var(--teal-soft);border-radius:14px;
+  background:rgba(212,160,23,0.08);border-radius:14px;
+  border:1px solid rgba(212,160,23,0.2);
 }
 .hdr-l h1{
   font-family:'Amiri',serif;
@@ -78,31 +79,31 @@ body::before{
 }
 .cd{
   margin-top:1.8vh;padding:2vh 2vw;
-  background:linear-gradient(135deg, rgba(29,78,216,0.15) 0%, rgba(13,148,136,0.12) 100%);
-  border:3px solid var(--next);
+  background:rgba(212,160,23,0.06);
+  border:2px solid rgba(212,160,23,0.3);
   border-radius:16px;
   display:flex;justify-content:center;align-items:center;gap:1.5rem;
   flex-shrink:0;
-  box-shadow:0 0 30px rgba(29,78,216,0.15), 0 0 80px rgba(29,78,216,0.05);
+  box-shadow:0 0 30px rgba(212,160,23,0.08), 0 0 80px rgba(212,160,23,0.03);
   animation:cdPulse 2s ease-in-out infinite;
 }
 @keyframes cdPulse{
-  0%,100%{box-shadow:0 0 30px rgba(29,78,216,0.15), 0 0 80px rgba(29,78,216,0.05)}
-  50%{box-shadow:0 0 40px rgba(29,78,216,0.25), 0 0 100px rgba(29,78,216,0.10)}
+  0%,100%{box-shadow:0 0 30px rgba(212,160,23,0.08), 0 0 80px rgba(212,160,23,0.03)}
+  50%{box-shadow:0 0 40px rgba(212,160,23,0.15), 0 0 100px rgba(212,160,23,0.06)}
 }
-.cd .lb{font-size:clamp(1.2rem,1.7vw,1.5rem);color:var(--dim);font-weight:500}
-.cd .pr{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:700;color:var(--next)}
+.cd .lb{font-size:clamp(1.2rem,1.7vw,1.5rem);color:#707070;font-weight:500}
+.cd .pr{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:700;color:#d4a017}
 .cd .tm{
   font-family:'JetBrains Mono',monospace;
   font-size:clamp(3.5rem,7vw,6rem);font-weight:700;
-  color:#f59e0b;
-  text-shadow:0 0 30px rgba(245,158,11,0.6), 0 0 60px rgba(245,158,11,0.3), 0 0 100px rgba(245,158,11,0.15);
+  color:#d4a017;
+  text-shadow:0 0 30px rgba(212,160,23,0.6), 0 0 60px rgba(212,160,23,0.3), 0 0 100px rgba(212,160,23,0.15);
   letter-spacing:-0.02em;
   animation:glow 1.5s ease-in-out infinite;
 }
 @keyframes glow{
-  0%,100%{text-shadow:0 0 30px rgba(245,158,11,0.6), 0 0 60px rgba(245,158,11,0.3), 0 0 100px rgba(245,158,11,0.15)}
-  50%{text-shadow:0 0 40px rgba(245,158,11,0.8), 0 0 80px rgba(245,158,11,0.5), 0 0 120px rgba(245,158,11,0.25)}
+  0%,100%{text-shadow:0 0 30px rgba(212,160,23,0.6), 0 0 60px rgba(212,160,23,0.3), 0 0 100px rgba(212,160,23,0.15)}
+  50%{text-shadow:0 0 40px rgba(212,160,23,0.8), 0 0 80px rgba(212,160,23,0.5), 0 0 120px rgba(212,160,23,0.25)}
 }
 .ramadan-banner{
   margin-top:1vh;padding:0.8vh 2vw;
@@ -136,7 +137,7 @@ body::before{
 .card{
   display:table-cell;
   background:var(--surface);
-  border:6px solid rgba(0,0,0,0.30);
+  border:6px solid rgba(255,255,255,0.15);
   border-radius:10px;
   padding:clamp(0.3rem,0.7vh,0.6rem) clamp(0.2rem,0.5vw,0.4rem);
   text-align:center;
@@ -157,12 +158,12 @@ body::before{
 }
 .card.active::before{background:var(--active)}
 .card.next{
-  background:rgba(29,78,216,0.15);
-  border:6px solid var(--next);
-  box-shadow:0 0 25px rgba(29,78,216,0.25), 0 0 60px rgba(29,78,216,0.10);
+  background:rgba(212,160,23,0.10);
+  border:6px solid #d4a017;
+  box-shadow:0 0 25px rgba(212,160,23,0.2), 0 0 60px rgba(212,160,23,0.08);
   transform:scale(1.03);
 }
-.card.next::before{background:var(--next);height:6px}
+.card.next::before{background:#d4a017;height:6px}
 .card.passed{opacity:0.35}
 .card .ic{font-size:clamp(1.2rem,1.8vw,1.8rem);margin-bottom:0.2rem}
 .card .ar{
@@ -188,11 +189,11 @@ body::before{
   font-weight:600;text-transform:uppercase;letter-spacing:0.12em;
 }
 .card.active .ti{color:var(--active)}
-.card.next .ti{color:var(--next);font-size:clamp(1.8rem,4.5vw,3.6rem);text-shadow:0 0 15px rgba(29,78,216,0.3)}
+.card.next .ti{color:#d4a017;font-size:clamp(1.8rem,4.5vw,3.6rem);text-shadow:0 0 15px rgba(212,160,23,0.3)}
 .card.active .nm{color:var(--active)}
-.card.next .nm{color:var(--next);font-size:clamp(1.2rem,2vw,1.9rem)}
+.card.next .nm{color:#d4a017;font-size:clamp(1.2rem,2vw,1.9rem)}
 .card.active .st{color:var(--active)}
-.card.next .st{color:var(--next);font-size:clamp(0.8rem,1.1vw,1rem)}
+.card.next .st{color:#d4a017;font-size:clamp(0.8rem,1.1vw,1rem)}
 .zoom-bar{
   display:flex;align-items:center;justify-content:center;gap:0.8rem;
   padding:0.5vh 2vw;flex-shrink:0;
@@ -238,7 +239,7 @@ body::before{
   <div class="hdr">
     <div class="hdr-l">
       <div class="ico">🕌</div>
-      <div><h1>Gebetszeiten Köln</h1><div class="sub">Diyanet İşleri Başkanlığı</div></div>
+      <div><h1>Gebetszeiten Köln</h1></div>
     </div>
     <div class="hdr-r">
       <div class="clock" id="clock"></div>
@@ -255,7 +256,7 @@ body::before{
     <input type="range" id="zoom" min="30" max="100" value="100" step="5">
     <span id="zoom-val">100%</span>
   </div>
-  <div class="ftr">Kaynak: namazvakitleri.diyanet.gov.tr</div>
+  <div class="ftr"></div>
 </div>
 
 <script>
@@ -338,7 +339,19 @@ function update(){
     }
   }
   if(nowMin<tm(today.imsak)){nextKey='imsak';nextSec=(tm(today.imsak)-nowMin)*60-now.getSeconds();}
-  if(!nextKey&&nowMin>=tm(today.yatsi)){activeKey='yatsi';nextKey=null;}
+  if(!nextKey&&nowMin>=tm(today.yatsi)){
+    activeKey='yatsi';
+    // Nächstes Gebet = Imsak morgen
+    const tomorrow=new Date(now);
+    tomorrow.setDate(tomorrow.getDate()+1);
+    const tomorrowData=MAP[dk(tomorrow)];
+    if(tomorrowData){
+      nextKey='imsak';
+      const minsUntilMidnight=(1440-nowMin)*60-now.getSeconds();
+      const minsAfterMidnight=tm(tomorrowData.imsak)*60;
+      nextSec=minsUntilMidnight+minsAfterMidnight;
+    }
+  }
 
   // Countdown
   const cdEl=document.getElementById('countdown');
@@ -346,7 +359,7 @@ function update(){
     const np=P.find(p=>p.k===nextKey);
     cdEl.innerHTML='<span class="lb">Sonraki:</span> <span class="pr">'+np.ic+' '+np.n+'</span> <span class="lb">—</span> <span class="tm">'+fc(nextSec)+'</span>';
   }else{
-    cdEl.innerHTML='<span class="lb">Tüm namazlar tamamlandı — Elhamdülillah</span>';
+    cdEl.innerHTML='<span class="lb">Sonraki:</span> <span class="pr">🌙 İmsak</span>';
   }
 
   // Iftar
