@@ -291,8 +291,9 @@ function fc(sec){
 function isRamadan(h){return h&&h.toLowerCase().includes('ramazan');}
 
 let lastCardState='';
+let currentDay='';
 
-// Einmal die Karten aufbauen
+// Karten aufbauen
 function buildCards(today){
   const grid=document.getElementById('grid');
   grid.innerHTML=P.map(p=>
@@ -308,49 +309,74 @@ function buildCards(today){
 
 function update(){
   const now=new Date();
-  const today=MAP[dk(now)];
-  if(!today)return;
+  const todayKey=dk(now);
+  const todayData=MAP[todayKey];
+  if(!todayData)return;
+
+  const nowMin=now.getHours()*60+now.getMinutes();
+
+  // Nach Yatsı? → Zeige morgen!
+  let displayData=todayData;
+  let showingTomorrow=false;
+  const tomorrow=new Date(now);
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowData=MAP[dk(tomorrow)];
+
+  if(nowMin>=tm(todayData.yatsi) && tomorrowData){
+    displayData=tomorrowData;
+    showingTomorrow=true;
+  }
+
+  // Tageswechsel oder Wechsel auf morgen? Karten neu bauen!
+  const displayKey=showingTomorrow?dk(tomorrow):todayKey;
+  if(displayKey!==currentDay){
+    currentDay=displayKey;
+    lastCardState='';
+    buildCards(displayData);
+  }
 
   // Uhr + Datum (jede Sekunde)
   document.getElementById('clock').textContent=
     now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('date-display').textContent=
-    now.getDate()+'. '+MO[now.getMonth()]+' '+now.getFullYear()+' — '+WD[now.getDay()];
-  document.getElementById('hijri').textContent=today.hicri;
+
+  // Datum: zeige morgen wenn nach Yatsı
+  if(showingTomorrow){
+    document.getElementById('date-display').textContent=
+      tomorrow.getDate()+'. '+MO[tomorrow.getMonth()]+' '+tomorrow.getFullYear()+' — '+WD[tomorrow.getDay()];
+  }else{
+    document.getElementById('date-display').textContent=
+      now.getDate()+'. '+MO[now.getMonth()]+' '+now.getFullYear()+' — '+WD[now.getDay()];
+  }
+  document.getElementById('hijri').textContent=displayData.hicri;
 
   // Ramadan
-  const ramadan=isRamadan(today.hicri);
+  const ramadan=isRamadan(displayData.hicri);
   document.getElementById('ramadan').style.display=ramadan?'block':'none';
   if(ramadan)document.getElementById('ramadan').innerHTML='☪ Ramazan-ı Şerif — Hayırlı Ramazanlar';
 
   // Gebetsstatus berechnen
-  const nowMin=now.getHours()*60+now.getMinutes();
   const keys=P.map(p=>p.k);
   const prayerKeys=['imsak','ogle','ikindi','aksam','yatsi'];
 
   let activeKey=null,nextKey=null,nextSec=null;
-  for(let i=0;i<keys.length;i++){
-    const t=tm(today[keys[i]]);
-    const nt=i+1<keys.length?tm(today[keys[i+1]]):1440;
-    if(nowMin>=t&&nowMin<nt){
-      if(prayerKeys.includes(keys[i]))activeKey=keys[i];
-      if(i+1<keys.length){nextKey=keys[i+1];nextSec=(nt-nowMin)*60-now.getSeconds();}
-      break;
+
+  if(showingTomorrow){
+    // Nach Yatsı: alle Gebete morgen stehen noch aus, nächstes = Imsak morgen
+    nextKey='imsak';
+    const minsUntilMidnight=(1440-nowMin)*60-now.getSeconds();
+    const minsAfterMidnight=tm(displayData.imsak)*60;
+    nextSec=minsUntilMidnight+minsAfterMidnight;
+  }else{
+    for(let i=0;i<keys.length;i++){
+      const t=tm(displayData[keys[i]]);
+      const nt=i+1<keys.length?tm(displayData[keys[i+1]]):1440;
+      if(nowMin>=t&&nowMin<nt){
+        if(prayerKeys.includes(keys[i]))activeKey=keys[i];
+        if(i+1<keys.length){nextKey=keys[i+1];nextSec=(nt-nowMin)*60-now.getSeconds();}
+        break;
+      }
     }
-  }
-  if(nowMin<tm(today.imsak)){nextKey='imsak';nextSec=(tm(today.imsak)-nowMin)*60-now.getSeconds();}
-  if(!nextKey&&nowMin>=tm(today.yatsi)){
-    activeKey='yatsi';
-    // Nächstes Gebet = Imsak morgen
-    const tomorrow=new Date(now);
-    tomorrow.setDate(tomorrow.getDate()+1);
-    const tomorrowData=MAP[dk(tomorrow)];
-    if(tomorrowData){
-      nextKey='imsak';
-      const minsUntilMidnight=(1440-nowMin)*60-now.getSeconds();
-      const minsAfterMidnight=tm(tomorrowData.imsak)*60;
-      nextSec=minsUntilMidnight+minsAfterMidnight;
-    }
+    if(nowMin<tm(displayData.imsak)){nextKey='imsak';nextSec=(tm(displayData.imsak)-nowMin)*60-now.getSeconds();}
   }
 
   // Countdown
@@ -364,15 +390,15 @@ function update(){
 
   // Iftar
   const iftarEl=document.getElementById('iftar');
-  if(ramadan&&nowMin<tm(today.aksam)){
+  if(ramadan&&!showingTomorrow&&nowMin<tm(displayData.aksam)){
     iftarEl.style.display='block';
-    iftarEl.innerHTML='🌙 İftara kalan: <strong>'+fc((tm(today.aksam)-nowMin)*60-now.getSeconds())+'</strong> ('+today.aksam+')';
+    iftarEl.innerHTML='🌙 İftara kalan: <strong>'+fc((tm(displayData.aksam)-nowMin)*60-now.getSeconds())+'</strong> ('+displayData.aksam+')';
   }else{
     iftarEl.style.display='none';
   }
 
   // Karten-Status nur updaten wenn sich was ändert
-  const newState=activeKey+'|'+nextKey;
+  const newState=nextKey+'|'+showingTomorrow;
   if(newState!==lastCardState){
     lastCardState=newState;
     P.forEach(p=>{
@@ -380,17 +406,17 @@ function update(){
       const st=document.getElementById('st-'+p.k);
       card.className='card';
       st.textContent='';
-      if(p.k===activeKey){card.classList.add('active');st.textContent='● Aktif';}
-      else if(p.k===nextKey){card.classList.add('next');st.textContent='→ Sonraki';}
-      else if(nowMin>tm(today[p.k])){card.classList.add('passed');st.textContent='✓';}
+      if(p.k===nextKey){card.classList.add('next');st.textContent='→ Sonraki';}
+      else if(!showingTomorrow&&nowMin>tm(displayData[p.k])){card.classList.add('passed');st.textContent='✓';}
     });
   }
 }
 
 // Init
-const today=MAP[dk(new Date())];
-if(today){
-  buildCards(today);
+const initToday=MAP[dk(new Date())];
+if(initToday){
+  currentDay=dk(new Date());
+  buildCards(initToday);
   update();
   setInterval(update,1000);
 }else{
